@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Digital - Pedidos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen pb-12">
+
+    <!-- Encabezado del Restaurante con el Carrito a la Derecha -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
+                    <i class="fa-solid fa-store text-lg"></i>
+                </div>
+               
+                
+                <div>
+                    <h1 id="nombre-restaurante" class="font-bold text-base text-gray-900">Cargando productos...</h1>
+                    <p class="text-xs text-green-600 font-medium flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Abierto para pedidos
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botón del Carrito en el Encabezado (Oculto si está vacío) -->
+            <button id="btn-carrito-header" onclick="abrirModalCarrito()" class="bg-black hover:bg-gray-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-md transition flex items-center space-x-2 hidden">
+                <i class="fa-solid fa-bag-shopping text-sm"></i>
+                <span>(<span id="cantidad-items-header">0</span>) <span id="total-carrito-header">$0.00</span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal del Menú -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="font-extrabold text-lg text-gray-800">Menú Disponible</h2>
+            <span id="contador-productos" class="text-xs bg-gray-200 text-gray-700 font-bold px-2.5 py-1 rounded-full">0 items</span>
+        </div>
+
+        <!-- Lista Dinámica de Productos -->
+        <div id="lista-productos" class="space-y-3">
+            <div class="text-center py-10">
+                <i class="fa-solid fa-spinner animate-spin text-2xl text-gray-400 mb-2"></i>
+                <p class="text-xs text-gray-500">Buscando productos del menú...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal del Carrito de Compras (Centrado a la mitad de la pantalla) -->
+    <div id="modal-carrito" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl max-h-[50vh] flex flex-col shadow-2xl animate-fade-in">
+            
+            <!-- Cabecera del Modal -->
+            <div class="p-3 border-b flex justify-between items-center">
+                <h3 class="font-bold text-base text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-black"></i> Tu Carrito
+                </h3>
+                <button onclick="cerrarModalCarrito()" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Lista de Ítems en el Carrito con Cantidad -->
+            <div id="items-carrito" class="p-3 space-y-3 overflow-y-auto flex-1">
+                <!-- Se inyectan dinámicamente -->
+            </div>
+
+            <!-- Resumen y Botón de WhatsApp -->
+            <div class="p-3 border-t bg-gray-50 space-y-2.5 rounded-b-3xl">
+                <div class="flex justify-between items-center pt-1">
+                    <span class="text-xs font-bold text-gray-600">Total a pagar:</span>
+                    <span id="total-carrito-modal" class="text-base font-extrabold text-gray-900">$0.00</span>
+                </div>
+
+                <button onclick="enviarPedidoWhatsApp()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition shadow-md flex items-center justify-center space-x-2 text-xs">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>Enviar Pedido por WhatsApp</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script de lógica de la tienda -->
+    <script>
+        // REEMPLAZA CON LA URL DE TU GOOGLE APPS SCRIPT
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWH07ZK-G12J3-i-YHPqYlbN8bN5oz_hcdutl5wdYXAM_C_D0HIl1bEh0OWd6ISDlY/exec';
+
+        let productosDisponibles = [];
+        let carrito = [];
+        let infoRestaurante = { nombre: "Restaurante", telefono: "" };
+        let slugTienda = "";
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            slugTienda = urlParams.get('tienda');
+
+            if (!slugTienda) {
+                document.getElementById('lista-productos').innerHTML = `
+                    <div class="text-center py-12 px-4 bg-white rounded-2xl shadow-sm">
+                        <i class="fa-solid fa-store-slash text-3xl text-gray-300 mb-3"></i>
+                        <h3 class="font-bold text-gray-800 text-sm">Tienda no especificada</h3>
+                        <p class="text-xs text-gray-500 mt-1">Por favor accede utilizando el enlace personalizado de tu tienda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            cargarCatalogoTienda();
+        };
+
+        async function cargarCatalogoTienda() {
+            try {
+                let response = await fetch(APPS_SCRIPT_URL);
+                let todosLosDatos = await response.json();
+
+                productosDisponibles = todosLosDatos.filter(p => p.slug && p.slug.toLowerCase() === slugTienda.toLowerCase());
+
+                if (productosDisponibles.length > 0) {
+                    infoRestaurante.nombre = productosDisponibles[0].nombreRestaurante;
+                    infoRestaurante.telefono = productosDisponibles[0].telefonoWhatsApp;
+                } else {
+                    infoRestaurante.nombre = "Tienda en Configuración";
+                }
+
+                document.getElementById('nombre-restaurante').innerText = infoRestaurante.nombre;
+                renderizarProductos();
+
+            } catch (error) {
+                console.error("Error al cargar menú:", error);
+                document.getElementById('lista-productos').innerHTML = '<p class="text-xs text-red-500 text-center py-6">Error al conectar con la base de datos.</p>';
+            }
+        }
+
+        function renderizarProductos() {
+            const contenedor = document.getElementById('lista-productos');
+            contenedor.innerHTML = '';
+
+            document.getElementById('contador-productos').innerText = `${productosDisponibles.length} items`;
+
+            if (productosDisponibles.length === 0) {
+                contenedor.innerHTML = `
+                    <div class="text-center py-12 px-4 bg-white rounded-2xl shadow-sm">
+                        <i class="fa-solid fa-plate-wheat text-3xl text-gray-300 mb-3"></i>
+                        <h3 class="font-bold text-gray-800 text-sm">No hay productos disponibles</h3>
+                        <p class="text-xs text-gray-500 mt-1">Este restaurante aún no ha subido artículos a su menú.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            productosDisponibles.forEach((prod) => {
+                contenedor.innerHTML += `
+                    <div class="bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between gap-3">
+                        <img src="${prod.imagenUrl || 'https://via.placeholder.com/80'}" class="w-20 h-20 object-cover rounded-xl border flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-xs text-gray-900 truncate">${prod.nombreProducto}</h3>
+                            <p class="text-xs font-extrabold text-gray-900 mt-1">$${Number(prod.precio).toFixed(2)}</p>
+                        </div>
+                        <button onclick="agregarAlCarrito(${prod.id})" class="bg-black hover:bg-gray-800 text-white w-10 h-10 rounded-xl flex items-center justify-center transition shadow-sm flex-shrink-0">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function agregarAlCarrito(idProducto) {
+            let producto = productosDisponibles.find(p => p.id == idProducto);
+            if (!producto) return;
+
+            let enCarrito = carrito.find(p => p.id == idProducto);
+            if (enCarrito) {
+                enCarrito.cantidad += 1;
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombreProducto: producto.nombreProducto,
+                    precio: Number(producto.precio),
+                    imagenUrl: producto.imagenUrl,
+                    cantidad: 1
+                });
+            }
+
+            actualizarInterfazCarrito();
+        }
+
+        function cambiarCantidad(index, cambio) {
+            carrito[index].cantidad += cambio;
+
+            if (carrito[index].cantidad <= 0) {
+                carrito.splice(index, 1);
+            }
+
+            actualizarInterfazCarrito();
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            actualizarInterfazCarrito();
+        }
+
+        function actualizarInterfazCarrito() {
+            const contenedorItems = document.getElementById('items-carrito');
+            const btnCarritoHeader = document.getElementById('btn-carrito-header');
+            contenedorItems.innerHTML = '';
+
+            let totalItemsCount = 0;
+            let subtotalGeneral = 0;
+
+            if (carrito.length === 0) {
+                contenedorItems.innerHTML = '<p class="text-xs text-gray-400 text-center py-6">Tu carrito está vacío</p>';
+                btnCarritoHeader.classList.add('hidden');
+                cerrarModalCarrito();
+                return;
+            }
+
+            btnCarritoHeader.classList.remove('hidden');
+
+            carrito.forEach((item, index) => {
+                totalItemsCount += item.cantidad;
+                let totalItem = item.precio * item.cantidad;
+                subtotalGeneral += totalItem;
+
+                contenedorItems.innerHTML += `
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                        <div class="flex items-center space-x-2.5">
+                            <img src="${item.imagenUrl || 'https://via.placeholder.com/50'}" class="w-10 h-10 object-cover rounded-xl border">
+                            <div>
+                                <h4 class="font-bold text-xs text-gray-900">${item.nombreProducto}</h4>
+                                <p class="text-[11px] text-gray-500">$${item.precio.toFixed(2)} c/u</p>
+                            </div>
+                        </div>
+
+                        <!-- Controles de Cantidad (+ y -) -->
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center border rounded-xl bg-gray-50 overflow-hidden shadow-sm">
+                                <button onclick="cambiarCantidad(${index}, -1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-200 transition text-xs font-bold">
+                                    -
+                                </button>
+                                <span class="px-2 text-xs font-bold text-gray-800">${item.cantidad}</span>
+                                <button onclick="cambiarCantidad(${index}, 1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-200 transition text-xs font-bold">
+                                    +
+                                </button>
+                            </div>
+                            <button onclick="eliminarDelCarrito(${index})" class="text-red-400 hover:text-red-600 p-1 text-xs transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cantidad-items-header').innerText = totalItemsCount;
+            document.getElementById('total-carrito-header').innerText = `$${subtotalGeneral.toFixed(2)}`;
+            document.getElementById('total-carrito-modal').innerText = `$${subtotalGeneral.toFixed(2)}`;
+        }
+
+        function abrirModalCarrito() {
+            document.getElementById('modal-carrito').classList.remove('hidden');
+        }
+
+        function cerrarModalCarrito() {
+            document.getElementById('modal-carrito').classList.add('hidden');
+        }
+
+        // Enviar pedido directo por WhatsApp sin solicitar nombre ni dirección
+        function enviarPedidoWhatsApp() {
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío.");
+                return;
+            }
+
+            let mensaje = `*¡Hola! Me gustaría hacer el siguiente pedido:*%0A%0A`;
+
+            let totalGeneral = 0;
+            carrito.forEach(item => {
+                let subtotal = item.precio * item.cantidad;
+                totalGeneral += subtotal;
+                mensaje += `• ${item.cantidad}x ${item.nombreProducto} ($${subtotal.toFixed(2)})%0A`;
+            });
+
+            mensaje += `%0A💰 *Total a pagar:* $${totalGeneral.toFixed(2)}`;
+
+            let telefonoWp = infoRestaurante.telefono;
+            if (!telefonoWp) {
+                alert("Este restaurante no tiene configurado un número de WhatsApp.");
+                return;
+            }
+
+            let urlWp = `https://api.whatsapp.com/send?phone=${telefonoWp}&text=${mensaje}`;
+            window.open(urlWp, '_blank');
+        }
+    </script>
+</body>
+</html>
