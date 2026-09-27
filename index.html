@@ -30,71 +30,7 @@
     </main>
 
     <script>
-        // Usa el mismo enlace de tu Google Apps Script compartido
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWH07ZK-G12J3-i-YHPqYlbN8bN5oz_hcdutl5wdYXAM_C_D0HIl1bEh0OWd6ISDlY/exec';
-
-        window.onload = async function() {
-            try {
-                let response = await fetch(APPS_SCRIPT_URL);
-                let datos = await response.json();
-                renderizarRestaurantes(datos);
-            } catch (error) {
-                console.error("Error al cargar el food court:", error);
-                document.getElementById('lista-restaurantes').innerHTML = `
-                    <p class="text-xs text-red-500 text-center py-6">Error al conectar con el directorio de tiendas.</p>
-                `;
-            }
-        };
-
-        function renderizarRestaurantes(productos) {
-            const contenedor = document.getElementById('lista-restaurantes');
-            contenedor.innerHTML = '';
-
-            // Filtrar y agrupar por slugs únicos para obtener una lista de restaurantes
-            const mapRestaurantes = {};
-            productos.forEach(p => {
-                if (p.slug && !mapRestaurantes[p.slug]) {
-                    mapRestaurantes[p.slug] = {
-                        slug: p.slug,
-                        nombreRestaurante: p.nombreRestaurante || p.slug,
-                        imagenReferencia: p.imagenUrl || 'https://via.placeholder.com/150'
-                    };
-                }
-            });
-
-            const restaurantes = Object.values(mapRestaurantes);
-
-            if (restaurantes.length === 0) {
-                contenedor.innerHTML = `
-                    <div class="text-center py-12 px-4 bg-white rounded-2xl shadow-sm">
-                        <i class="fa-solid fa-store-slash text-3xl text-gray-300 mb-3"></i>
-                        <h3 class="font-bold text-gray-800 text-sm">No hay restaurantes abiertos</h3>
-                        <p class="text-xs text-gray-500 mt-1">Vuelve más tarde o registra una tienda nueva.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Crear las "Boxes" dinámicamente por cada restaurante detectado
-            restaurantes.forEach(tienda => {
-                contenedor.innerHTML += `
-                    <a href="menu.html?tienda=${tienda.slug}" class="bg-white p-4 rounded-2xl shadow-sm border flex items-center justify-between gap-4 hover:shadow-md transition group">
-                        <div class="flex items-center space-x-3.5">
-                            <img src="${tienda.imagenReferencia}" class="w-14 h-14 object-cover rounded-xl border flex-shrink-0 group-hover:scale-105 transition">
-                            <div>
-                                <h3 class="font-bold text-sm text-gray-900 group-hover:text-black">${tienda.nombreRestaurante}</h3>
-                                <p class="text-[11px] text-green-600 font-medium mt-0.5 flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Abierto • Ver Menú
-                                </p>
-                            </div>
-                        </div>
-                        <div class="bg-gray-100 group-hover:bg-black group-hover:text-white text-gray-600 w-8 h-8 rounded-full flex items-center justify-center transition">
-                            <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </div>
-                    </a>
-                `;
-            });
-        }
+      const _0x196b70=_0x306e;(function(_0x57acc5,_0x380466){const _0x40bbe3=_0x306e,_0x2e9927=_0x57acc5();while(!![]){try{const _0x82f987=parseInt(_0x40bbe3(0x15d))/(0xfaa+0x1813*0x1+-0x27bc)*(-parseInt(_0x40bbe3(0xd5))/(-0x6*-0x4bb+0x1*0x1de3+-0x5*0xba7))+parseInt(_0x40bbe3(0x124))/(0x191b*-0x1+0x4c8+0x1456)+-parseInt(_0x40bbe3(0x13f))/(0xe*-0x26+-0xee*-0x1d+0x6*-0x425)+parseInt(_0x40bbe3(0x127))/(0x903+-0x1*-0x7e5+0x189*-0xb)*(parseInt(_0x40bbe3(0xd4))/(0x977+0x2*0x6fb+0x3*-0x7cd))+-parseInt(_0x40bbe3(0x145))/(-0x1836+0x69*-0x24+-0x7cd*-0x5)+parseInt(_0x40bbe3(0xf4))/(-0x77e+0x351+-0x1*-0x435)+parseInt(_0x40bbe3(0x160))/(-0x1*0x15a1+-0xc63+0x220d*0x1)*(-parseInt(_0x40bbe3(0x128))/(-0x15f1+0x3*0x916+-0x7*0xc1));if(_0x82f987===_0x380466)break;else _0x2e9927['push'](_0x2e9927['shift']());}catch(_0x56be88){_0x2e9927['push'](_0x2e9927['shift']());}}}(_0x1c37,0x4a57*0x1d+-0x11614a+0x1382f9));const APPS_SCRIPT_URL=_0x196b70(0xc6)+_0x196b70(0x141)+_0x196b70(0x11f)+_0x196b70(0xc9)+_0x196b70(0x131)+_0x196b70(0xbe)+_0x196b70(0x11e)+_0x196b70(0xb6)+_0x196b70(0x13a)+_0x196b70(0x107)+_0x196b70(0x161)+'ec';function _0x1c37(){const _0x5375a4=['ter\x20py-6\x22>','ded-full\x20f','</h3>\x0a\x20\x20\x20\x20','d\x20fa-store','text-green','-14\x20h-14\x20o','\x20hover:sha','-gray-100\x20','lex\x20items-','\x20\x20\x20\x20\x20\x20\x20<p\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20','Error\x20al\x20c','values','er:text-wh','tify-cente','jzjFd','ween\x20gap-4','o\x20hay\x20rest','\x20\x20\x20\x20</div>','length','0\x20text-cen','ed-2xl\x20sha','ById','\x22></span>\x20','hover:scal','5777504BsSMEU','nter\x20py-12','3>\x0a\x20\x20\x20\x20\x20\x20\x20','r\x20transiti','ext-red-50','\x20flex\x20item','\x22\x20class=\x22b','aurantes\x20a','imagenRefe','-bold\x20text','error','-gray-800\x20','tems-cente','4\x20rounded-','\x20\x20\x20\x20\x20\x20\x20\x20','nda\x20nueva.','medium\x20mt-','dow-md\x20tra','-sm\x20text-g','HIl1bEh0OW','>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','text-sm\x22>N','undVl','e\x20o\x20regist','tienda=','aurante','=\x22flex\x20ite','center\x20jus','t-xs\x20text-','\x20\x20\x20\x20\x20<h3\x20c','Abierto\x20•\x20','-gray-300\x20','innerHTML','\x20\x20\x20\x20\x20','\x20group-hov','\x20\x20\x20\x20\x20</div','8\x20h-8\x20roun','getElement','\x20<a\x20href=\x22','slug','\x20\x20\x20\x20\x20\x20<spa','argar\x20el\x20f','qYlbN8bN5o','e.com/macr','lass=\x22font','oup-hover:','nsition\x20gr','ext-xs\x22></','4047210tgmkjv','s-center\x20j','json','85OIehqX','310XRhDJe','forEach','text-black','https://vi','geHjL','mb-3\x22></i>','k-0\x20group-','\x20class=\x22bg','iendas.</p','byWH07ZK-G','ite\x20text-g','g-white\x20p-','vrPFs','\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x20\x20<img\x20src','imagenUrl','onectar\x20co','xt-[11px]\x20','dYXAM_C_D0','mate-pulse','\x20\x20\x20<i\x20clas','\x20class=\x22te','i>\x0a\x20\x20\x20\x20\x20\x20\x20','832288THzYaR','n\x20el\x20direc','ript.googl','ull\x20bg-gre','5\x22>\x0a\x20\x20\x20\x20\x20\x20','aurantes','1395184PErtNz','ms-center\x20','oup\x22>\x0a\x20\x20\x20\x20','sition\x22>\x0a\x20','</p>\x0a\x20\x20\x20\x20\x20','xl\x20border\x20','\x20<p\x20class=','\x20\x20\x20\x20\x20\x20\x20</d','rencia','ray-900\x20gr','d\x20fa-chevr','onload','-600\x20font-','\x20\x20\x20\x20</a>\x0a\x20','r\x20rounded-','space-x-3.','0.5\x20flex\x20i','a.placehol','gray-500\x20m','<div\x20class','cVCaQ','-1.5\x20h-1.5','e-105\x20tran','flex-shrin','1UHnSJn','Ver\x20Menú\x0a\x20','n\x20class=\x22w','198234TFDTJL','d6ISDlY/ex','en-500\x20ani','nombreRest','s=\x22text-ce','iv>\x0a\x20\x20\x20\x20\x20\x20','on\x22>\x0a\x20\x20\x20\x20\x20','\x20rounded-f','\x22text-xs\x20t','\x20\x20\x20\x20\x20\x20<div','2xl\x20shadow','z_hcdutl5w','-sm\x20border','der.com/15','t-1\x22>Vuelv','\x20\x20\x20\x20\x20\x20\x20<di','\x20</p>\x0a\x20\x20\x20\x20','e\x20más\x20tard','bject-cove','12J3-i-YHP','ray-600\x20w-','s=\x22fa-soli','dow-sm\x22>\x0a\x20','ra\x20una\x20tie','ood\x20court:','\x20<div\x20clas','lista-rest','https://sc','hite\x20round','class=\x22tex','os/s/AKfyc','OQjNo','ustify-bet','r:bg-black','\x22\x20class=\x22w','v>\x0a\x20\x20\x20\x20\x20\x20\x20','t-3xl\x20text','group-hove','on-right\x20t','r\x20gap-1\x22>\x0a','menu.html?','225294kEtKIs','1855614evhtpi','\x20\x20\x20\x20\x20\x20\x20\x20<p','\x20px-4\x20bg-w','torio\x20de\x20t','biertos</h','-slash\x20tex'];_0x1c37=function(){return _0x5375a4;};return _0x1c37();}function _0x306e(_0x33c0e5,_0x8c9101){_0x33c0e5=_0x33c0e5-(-0x2328+-0x4*0x25+0x246c);const _0x59b20a=_0x1c37();let _0x14e1e8=_0x59b20a[_0x33c0e5];return _0x14e1e8;}window[_0x196b70(0x150)]=async function(){const _0x1df754=_0x196b70,_0xb95694={'vrPFs':function(_0x5a2740,_0xcd451c){return _0x5a2740(_0xcd451c);},'geHjL':_0x1df754(0xe6)+_0x1df754(0x11d)+_0x1df754(0xc3),'cVCaQ':_0x1df754(0xc5)+_0x1df754(0x144)};try{let _0x106400=await _0xb95694[_0x1df754(0x134)](fetch,APPS_SCRIPT_URL),_0x22619c=await _0x106400[_0x1df754(0x126)]();_0xb95694[_0x1df754(0x134)](renderizarRestaurantes,_0x22619c);}catch(_0x32f91d){console[_0x1df754(0xfe)](_0xb95694[_0x1df754(0x12c)],_0x32f91d),document[_0x1df754(0x119)+_0x1df754(0xf1)](_0xb95694[_0x1df754(0x159)])[_0x1df754(0x114)]=_0x1df754(0xe5)+_0x1df754(0x135)+_0x1df754(0x14b)+_0x1df754(0xb3)+_0x1df754(0xf8)+_0x1df754(0xef)+_0x1df754(0xdb)+_0x1df754(0xe6)+_0x1df754(0x138)+_0x1df754(0x140)+_0x1df754(0xd8)+_0x1df754(0x130)+_0x1df754(0x108)+_0x1df754(0x102);}};function renderizarRestaurantes(_0x2b1898){const _0x3cea7d=_0x196b70,_0x1c0703={'undVl':_0x3cea7d(0x12b)+_0x3cea7d(0x156)+_0x3cea7d(0xb8)+'0','OQjNo':_0x3cea7d(0xc5)+_0x3cea7d(0x144),'jzjFd':function(_0x497732,_0x2add0d){return _0x497732===_0x2add0d;}},_0x543fd0=document[_0x3cea7d(0x119)+_0x3cea7d(0xf1)](_0x1c0703[_0x3cea7d(0xca)]);_0x543fd0[_0x3cea7d(0x114)]='';const _0x41dbe4={};_0x2b1898[_0x3cea7d(0x129)](_0x3834c9=>{const _0x38ad45=_0x3cea7d;_0x3834c9[_0x38ad45(0x11b)]&&!_0x41dbe4[_0x3834c9[_0x38ad45(0x11b)]]&&(_0x41dbe4[_0x3834c9[_0x38ad45(0x11b)]]={'slug':_0x3834c9[_0x38ad45(0x11b)],'nombreRestaurante':_0x3834c9[_0x38ad45(0x163)+_0x38ad45(0x10d)]||_0x3834c9[_0x38ad45(0x11b)],'imagenReferencia':_0x3834c9[_0x38ad45(0x137)]||_0x1c0703[_0x38ad45(0x10a)]});});const _0x262823=Object[_0x3cea7d(0xe7)](_0x41dbe4);if(_0x1c0703[_0x3cea7d(0xea)](_0x262823[_0x3cea7d(0xee)],-0x6*0x4b8+0x1a96+0x1ba)){_0x543fd0[_0x3cea7d(0x114)]=_0x3cea7d(0xe5)+_0x3cea7d(0x135)+_0x3cea7d(0xc4)+_0x3cea7d(0x164)+_0x3cea7d(0xf5)+_0x3cea7d(0xd7)+_0x3cea7d(0xc7)+_0x3cea7d(0xf0)+_0x3cea7d(0xc1)+_0x3cea7d(0x135)+_0x3cea7d(0x135)+_0x3cea7d(0x13c)+_0x3cea7d(0xc0)+_0x3cea7d(0xde)+_0x3cea7d(0xda)+_0x3cea7d(0xcf)+_0x3cea7d(0x113)+_0x3cea7d(0x12d)+_0x3cea7d(0xe5)+_0x3cea7d(0x135)+_0x3cea7d(0x111)+_0x3cea7d(0x120)+_0x3cea7d(0xfd)+_0x3cea7d(0xff)+_0x3cea7d(0x109)+_0x3cea7d(0xec)+_0x3cea7d(0xfb)+_0x3cea7d(0xd9)+_0x3cea7d(0xf6)+_0x3cea7d(0x135)+_0x3cea7d(0xe4)+_0x3cea7d(0xc8)+_0x3cea7d(0x110)+_0x3cea7d(0x157)+_0x3cea7d(0xb9)+_0x3cea7d(0xbc)+_0x3cea7d(0x10b)+_0x3cea7d(0xc2)+_0x3cea7d(0x103)+_0x3cea7d(0x149)+_0x3cea7d(0x135)+_0x3cea7d(0x117)+_0x3cea7d(0x108)+_0x3cea7d(0x102);return;}_0x262823[_0x3cea7d(0x129)](_0x291df1=>{const _0x2cec22=_0x3cea7d;_0x543fd0[_0x2cec22(0x114)]+=_0x2cec22(0xe5)+_0x2cec22(0x135)+_0x2cec22(0x11a)+_0x2cec22(0xd3)+_0x2cec22(0x10c)+_0x291df1[_0x2cec22(0x11b)]+(_0x2cec22(0xfa)+_0x2cec22(0x133)+_0x2cec22(0x101)+_0x2cec22(0xb5)+_0x2cec22(0xb7)+_0x2cec22(0xf9)+_0x2cec22(0x125)+_0x2cec22(0xcb)+_0x2cec22(0xeb)+_0x2cec22(0xe1)+_0x2cec22(0x105)+_0x2cec22(0x122)+_0x2cec22(0x147)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x158)+_0x2cec22(0x10e)+_0x2cec22(0x146)+_0x2cec22(0x154)+_0x2cec22(0x143)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x136)+'=\x22')+_0x291df1[_0x2cec22(0xfc)+_0x2cec22(0x14d)]+(_0x2cec22(0xcd)+_0x2cec22(0xe0)+_0x2cec22(0xbd)+_0x2cec22(0x153)+_0x2cec22(0x14a)+_0x2cec22(0x15c)+_0x2cec22(0x12e)+_0x2cec22(0xf3)+_0x2cec22(0x15b)+_0x2cec22(0x148)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0xba)+_0x2cec22(0xce)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x111)+_0x2cec22(0x120)+_0x2cec22(0xfd)+_0x2cec22(0x106)+_0x2cec22(0x14e)+_0x2cec22(0x121)+_0x2cec22(0x12a)+'\x22>')+_0x291df1[_0x2cec22(0x163)+_0x2cec22(0x10d)]+(_0x2cec22(0xdd)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0xd6)+_0x2cec22(0x13d)+_0x2cec22(0x139)+_0x2cec22(0xdf)+_0x2cec22(0x151)+_0x2cec22(0x104)+_0x2cec22(0x155)+_0x2cec22(0x100)+_0x2cec22(0xd2)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x11c)+_0x2cec22(0x15f)+_0x2cec22(0x15a)+_0x2cec22(0xb2)+_0x2cec22(0x142)+_0x2cec22(0x162)+_0x2cec22(0x13b)+_0x2cec22(0xf2)+_0x2cec22(0x112)+_0x2cec22(0x15e)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0xbb)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0xed)+_0x2cec22(0xe5)+_0x2cec22(0x135)+_0x2cec22(0x117)+_0x2cec22(0x108)+_0x2cec22(0x135)+_0x2cec22(0xb4)+_0x2cec22(0x12f)+_0x2cec22(0xe2)+_0x2cec22(0xd0)+_0x2cec22(0xcc)+_0x2cec22(0x116)+_0x2cec22(0xe8)+_0x2cec22(0x132)+_0x2cec22(0xbf)+_0x2cec22(0x118)+_0x2cec22(0xdc)+_0x2cec22(0xe3)+_0x2cec22(0x10f)+_0x2cec22(0xe9)+_0x2cec22(0xf7)+_0x2cec22(0xb1)+_0x2cec22(0x135)+_0x2cec22(0x135)+_0x2cec22(0x13c)+_0x2cec22(0xc0)+_0x2cec22(0x14f)+_0x2cec22(0xd1)+_0x2cec22(0x123)+_0x2cec22(0x13e)+_0x2cec22(0x135)+_0x2cec22(0x14c)+_0x2cec22(0xb0)+_0x2cec22(0x135)+_0x2cec22(0x152)+_0x2cec22(0x135)+_0x2cec22(0x115));});}
     </script>
 </body>
 </html>
